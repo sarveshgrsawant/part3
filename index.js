@@ -74,7 +74,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 app.delete('/api/persons/:id', (req, res, next) => {
     // const id = Number(req.params.id)
     // persons = persons.filter(p => p.id !== id)
-    User.findByIdAndDelete(id).then((result) => {
+    User.findByIdAndDelete(req.params.id).then((result) => {
         res.status(204).end()
     }).catch(error => {
         console.log(error.name)
@@ -99,31 +99,13 @@ app.post('/api/persons', (req, res, next) => {
     //     })
     // }
     //     const persons = undefined
-    User.find({}).then((per) => {
-        persons = per
-    }).catch(error => {
-        console.log(error.name)
-        next(error)
-    })
-
-    let id = undefined
-
-    persons.forEach((person) => {
-	    if(person.name === body.name){
-    	    id = person.id
-        }
-    })
-
-    if(id){
-        return update(req, res, id)
-    }
-
+    
     if(!body.name || !body.number){
         return res.status(400).json({
-            error: 'The name or number is missing'
-        })
+           error: 'The name or number is missing'
+            })
     }
-
+        
     const user = new User(
         {
             name: body.name,
@@ -131,24 +113,26 @@ app.post('/api/persons', (req, res, next) => {
             // id: Math.floor(Math.random() * 1000000) + 1
         }
     )
-    
+            
     // persons = persons.concat(person)
-
+        
     user.save().then((user) => {
         res.json(user.toJSON())
-    }).catch(error => {
-        console.log(error.name)
-        next(error)
-    })
+        }).catch(error => {
+            console.log(error.name)
+            next(error)
+        })
 })
 
-const update = (req, res, id, next) => {
+app.put('/api/persons/:id', (req, res, next) => {
+    let body = req.body
     const person = {
-        name: req.body.name,
-        number: req.body.number
+        name: body.name,
+        number: body.number
     }
-
-    User.findByIdAndUpdate(id, person, { new:true }).then(
+    console.log('update')
+    console.log(req.params.id)
+    User.findByIdAndUpdate(req.params.id, person, { new:true }).then(
         (person)=>{
             res.json(person)
         }
@@ -156,7 +140,7 @@ const update = (req, res, id, next) => {
         console.log(error.name)
         next(error)
     })
-}
+})
 
 const unknownEndpoint = (req, res) => {
     res.status(404).send({ error: "unknown endpoint" })
