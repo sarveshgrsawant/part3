@@ -18,12 +18,14 @@ const userSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            unique: 'name must be unique',
-            minlength:3
+            minlength: 3,
+            required: true,
+            unique: 'name must be unique'      
         },
         number: {
-            type:Number,
-            minlength: 8
+            type:String,
+            minlength: 8,
+            required: true,
         }
     }
 )
