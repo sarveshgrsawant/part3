@@ -18,9 +18,13 @@ const userSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            unique: 'name must be unique'
+            unique: 'name must be unique',
+            minlength:3
         },
-        number: Number
+        number: {
+            type:Number,
+            minlength: 8
+        }
     }
 )
 
