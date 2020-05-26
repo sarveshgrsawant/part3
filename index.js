@@ -158,7 +158,8 @@ const errorHandler = (error, req, res, next) => {
 
     if(error.name === 'ValidationError'){
         console.log(error.name)
-        return res.status(400).json({ error: 'user already exists' })
+        console.log(error.message)
+        return res.status(400).json({ error: error.message })
     }
     next(error)
 }
