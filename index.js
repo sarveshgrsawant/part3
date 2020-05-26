@@ -149,11 +149,16 @@ const unknownEndpoint = (req, res) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (error, req, res, next) => {
-    console.log(error.message)
+    console.log(error.name)
     
     if(error.name === "CastError"){
-        console.log("heyy")
+        console.log(error.name)
         return res.status(400).json({ error: 'malformed id'})
+    }
+
+    if(error.name === 'ValidationError'){
+        console.log(error.name)
+        return res.status(400).json({ error: 'user already exists' })
     }
     next(error)
 }

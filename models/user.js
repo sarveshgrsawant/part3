@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
+mongoose.set('useCreateIndex', true)
 
 const password = process.argv[2]
 const url = process.env.MONGODB_URI
@@ -14,11 +16,15 @@ mongoose.connect(url, { useNewUrlParser:true, useUnifiedTopology: true })
 
 const userSchema = new mongoose.Schema(
     {
-        name: String,
-        number: String
+        name: {
+            type: String,
+            unique: 'name must be unique'
+        },
+        number: Number
     }
 )
 
+userSchema.plugin(uniqueValidator)
 
 userSchema.set('toJSON', {
     transform: (document, returnedObject) => {
